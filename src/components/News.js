@@ -7,18 +7,26 @@ import {
   FlatList
 } from 'react-native';
 import axios from 'axios';
-import DetailNews from './DetailNews';
+import Spinner from 'react-native-loading-spinner-overlay';
+import Header from './Header';
 
 class News extends Component {
+
+  static navigationOptions = {
+    header: null,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
-      news: []
+      news: [],
+      visible: false
     };
   }
 
   componentWillMount() {
     const self = this;
+    self.setState({ visible: true });
     axios.get('https://api.nytimes.com/svc/topstories/v2/home.json', {
       params: {
         'api-key': '21fb82f4756b455cbd77f1aba5203def'
@@ -29,12 +37,9 @@ class News extends Component {
     });
   }
 
-  detailNews = (url) => {
-    return <DetailNews url={url} />;
-  }
-
   render() {
     const { news } = this.state;
+    const { navigate } = this.props.navigation;
     const {
       contentContainerStyle,
       dateStyle,
@@ -47,19 +52,26 @@ class News extends Component {
     if (news.length === 0) {
       return (
         <View style={loadingContainerStyle}>
-          <Text style={loadingStyle}>Loading...</Text>
+          <Header />
+          <Spinner
+            style={loadingStyle}
+            visible={this.state.visible}
+            textContent={'Loading...'}
+            textStyle={{ color: '#fff' }}
+          />
         </View>
       );
     } else {
       return (
         <View>
+          <Header />
           <FlatList
             data={news}
             keyExtractor={item => item.title}
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={contentContainerStyle}
-                onPress={() => this.detailNews(item.url)}
+                onPress={() => navigate('DetailNews', { url: item.url })}
               >
                 <View key={item.title}>
                   <Text style={titleStyle}>{item.title}</Text>
@@ -97,12 +109,11 @@ const styles = {
     paddingBottom: 10
   },
   loadingContainerStyle: {
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   loadingStyle: {
     justifyContent: 'center',
-    marginTop: '50%'
+    marginTop: '50%',
+    flex: 1
   },
   titleStyle: {
     fontSize: 15

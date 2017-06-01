@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
-import Main from './components/Main';
+import { StackNavigator } from 'react-navigation';
+import News from './components/News';
+import DetailNews from './components/DetailNews';
 
-class App extends Component {
-  render() {
-    return (
-      <Main />
-    );
-  }
-}
+const App = StackNavigator({
+  Main: { screen: News },
+  DetailNews: { screen: DetailNews }
+},{ headerMode: 'screen' });
+
 
 export default App;

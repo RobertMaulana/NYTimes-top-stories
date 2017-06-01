@@ -2,17 +2,21 @@ import React, { Component } from 'react';
 import { WebView } from 'react-native';
 
 class DetailNews extends Component {
+
+  static navigationOptions = {
+    title: ''
+  }
+
   constructor(props) {
     super(props);
     this.state = {};
   }
 
   render() {
-    alert("test");
+    const { url } = this.props.navigation.state.params;
     return (
       <WebView
-        source={{ uri: 'https://github.com/facebook/react-native' }}
-        style={{ marginTop: 20 }}
+        source={{ uri: url }}
       />
     );
   }

@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text
+  Text,
+  Image
 } from 'react-native';
 
 class Header extends Component {
   render() {
-    const { headerContainerStyle, titleStyles } = styles;
+    const { topStoriesStyle, headerContainerStyle, titleStyles } = styles;
     return (
       <View style={headerContainerStyle}>
-        <Text style={titleStyles}>NYTimes Top Stories</Text>
+        <Image
+          style={titleStyles}
+          source={require('../img/NYT-wordmark.png')}
+        />
+        <Text style={topStoriesStyle}>Top Stories</Text>
       </View>
     );
   }
@@ -17,7 +22,7 @@ class Header extends Component {
 
 const styles = {
   headerContainerStyle: {
-    padding: 20,
+    padding: 17,
     justifyContent: 'center',
     backgroundColor: '#fff',
     shadowColor: '#000000',
@@ -25,8 +30,15 @@ const styles = {
     shadowOpacity: 0.2,
     elevation: 5,
   },
+  topStoriesStyle: {
+    fontSize: 15,
+    alignSelf: 'flex-end',
+    paddingTop: 5,
+    marginRight: 45
+  },
   titleStyles: {
-    fontSize: 17,
+    height: 25,
+    width: 300,
     alignSelf: 'center'
   }
 };
