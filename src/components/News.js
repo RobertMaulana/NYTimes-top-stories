@@ -20,20 +20,42 @@ class News extends Component {
     super(props);
     this.state = {
       news: [],
-      visible: false
+      visible: false,
+      refreshing: false,
+      error: null
     };
   }
 
   componentWillMount() {
-    const self = this;
-    self.setState({ visible: true });
+    this.makeRemoteRequest();
+  }
+
+  makeRemoteRequest() {
+    this.setState({ visible: true });
     axios.get('https://api.nytimes.com/svc/topstories/v2/home.json', {
       params: {
         'api-key': '21fb82f4756b455cbd77f1aba5203def'
       }
     })
     .then((response) => {
-      self.setState({ news: response.data.results });
+      this.setState({
+        news: response.data.results,
+        refreshing: false
+      });
+    })
+    .catch((error) => {
+      this.setState({
+        error,
+        refreshing: false
+      });
+    });
+  }
+
+  handleRefresh() {
+    this.setState({
+      refreshing: true
+    }, () => {
+      this.makeRemoteRequest();
     });
   }
 
@@ -68,6 +90,8 @@ class News extends Component {
           <FlatList
             data={news}
             keyExtractor={item => item.title}
+            refreshing={false}
+            onRefresh={() => this.handleRefresh}
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={contentContainerStyle}
